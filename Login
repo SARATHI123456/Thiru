@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login and Sign Up</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 300px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      width: 95%;
+      padding: 10px;
+      margin-top: 15px;
+      background: #007bff;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    p {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2 id="formTitle">Login</h2>
+
+  <input type="email" id="email" placeholder="Email" required>
+  <input type="password" id="password" placeholder="Password" required>
+
+  <button id="loginBtn" onclick="login()">Login</button>
+  <button id="signUpBtn" onclick="signUp()" style="display:none;">Sign Up</button>
+
+  <p id="toggleForm">
+    Don't have an account? <a href="#" onclick="toggleForm()">Sign Up</a>
+  </p>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  // Import Firebase SDK
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+
+  // Firebase config
+  const firebaseConfig = {
+    apiKey: "AIzaSyByzteY7kSJjXi0YS0nklAbYy-ptXziT_s",
+    authDomain: "login-and-sign-up-69f01.firebaseapp.com",
+    projectId: "login-and-sign-up-69f01",
+    storageBucket: "login-and-sign-up-69f01.firebasestorage.app",
+    messagingSenderId: "730251663205",
+    appId: "1:730251663205:web:df370a6ca36938b6c0b38c"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  // Login function
+  window.login = function() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        alert("Login Successful!");
+        console.log(userCredential.user);
+      })
+      .catch((error) => {
+        alert(error.message);
+        console.error(error);
+      });
+  };
+
+  // Sign Up function
+  window.signUp = function() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        alert("Sign Up Successful!");
+        console.log(userCredential.user);
+      })
+      .catch((error) => {
+        alert(error.message);
+        console.error(error);
+      });
+  };
+
+  // Toggle between Login and Sign Up forms
+  window.toggleForm = function() {
+    const formTitle = document.getElementById("formTitle");
+    const loginBtn = document.getElementById("loginBtn");
+    const signUpBtn = document.getElementById("signUpBtn");
+    const toggleFormText = document.getElementById("toggleForm");
+
+    if (loginBtn.style.display === "none") {
+      // Switch to Login
+      formTitle.innerText = "Login";
+      loginBtn.style.display = "block";
+      signUpBtn.style.display = "none";
+      toggleFormText.innerHTML = `Don't have an account? <a href="#" onclick="toggleForm()">Sign Up</a>`;
+    } else {
+      // Switch to Sign Up
+      formTitle.innerText = "Sign Up";
+      loginBtn.style.display = "none";
+      signUpBtn.style.display = "block";
+      toggleFormText.innerHTML = `Already have an account? <a href="#" onclick="toggleForm()">Login</a>`;
+    }
+  };
+</script>
+
+</body>
+</html>
